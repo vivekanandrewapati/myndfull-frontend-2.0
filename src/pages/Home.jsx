@@ -2,7 +2,7 @@ import React from 'react';
 import secimage from '../assets/image-main.png';
 import frame from '../assets/Frame.png';
 import Card from '../components/Card';
-import meditation from '../assets/meditation.png';
+import meditation from '../assets/Meditation.png';
 import moodmeter from '../assets/moodmeter.webp';
 import music from '../assets/calming-music.webp';
 import sparkel from '../assets/sparkel.png';
