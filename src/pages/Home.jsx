@@ -1,6 +1,6 @@
 import React from 'react';
 import secimage from '../assets/image-main.png';
-import frame from '../assets/frame.png';
+import frame from '../assets/Frame.png';
 import Card from '../components/Card';
 import meditation from '../assets/meditation.png';
 import moodmeter from '../assets/moodmeter.webp';
