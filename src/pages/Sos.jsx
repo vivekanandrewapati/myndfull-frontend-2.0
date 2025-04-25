@@ -8,31 +8,30 @@ function SOS() {
     const [sosActivated, setSosActivated] = useState(false);
     const navigate = useNavigate();
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
-    const [currentuser, setCurrentuser] = useState(null);
+    const [currentUser, setCurrentUser] = useState(null);
 
-    // Add useEffect for auth check
     useEffect(() => {
-        const checkAuth = async () => {
+        const checkAuthAndLoadData = async () => {
             try {
-                const response = await axios.get(`${backendUrl}/api/v1/users/check-auth`, {
+                // Check authentication using cookies
+                const userResponse = await axios.get(`${backendUrl}/api/v1/users/current-user`, {
                     withCredentials: true
                 });
-                
-                if (!response.data.authenticated) {
-                    navigate('/login');
-                }
+
                 if (userResponse.data?.data) {
                     setCurrentUser(userResponse.data.data);
                 } else {
                     navigate('/login');
-                    return;
                 }
-            } catch (error) {
-                navigate('/login');
+            } catch (err) {
+                console.error('Auth check error:', err);
+                if (err.response?.status === 401) {
+                    navigate('/login');
+                }
             }
         };
-        
-        checkAuth();
+
+        checkAuthAndLoadData();
     }, [navigate, backendUrl]);
 
     const emergencyNumbers = [
@@ -59,8 +58,11 @@ function SOS() {
     ];
 
     const handleSOSClick = () => {
-        if(!currentuser)
-        setShowConfirmation(true);
+        if (currentUser) {
+            setShowConfirmation(true);
+        } else {
+            navigate('/login');
+        }
     };
 
     const handleConfirmSOS = async () => {
