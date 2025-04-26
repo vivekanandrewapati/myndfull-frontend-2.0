@@ -17,16 +17,21 @@ function Header() {
         const checkAuthStatus = async () => {
             try {
                 const response = await axios.get(`${backendUrl}/api/v1/users/check-auth`, {
-                    withCredentials: true
+                    withCredentials: true,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
                 });
                 setIsLoggedIn(response.data.authenticated);
             } catch (error) {
-                console.error('Auth check error details:', {
-                    status: error.response?.status,
-                    data: error.response?.data,
-                    headers: error.response?.headers
-                });
-                setIsLoggedIn(false);
+                if (error.response?.status === 401) {
+                    // Explicitly handle 401 as not logged in
+                    setIsLoggedIn(false);
+                } else {
+                    console.error('Auth check error:', error);
+                    setIsLoggedIn(false);
+                }
             }
         };
         
