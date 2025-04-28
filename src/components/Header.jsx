@@ -13,30 +13,22 @@ function Header() {
 
     // Check auth status on mount and route changes
     useEffect(() => {
-        // Replace localStorage check with a function to check if user is authenticated via cookies
         const checkAuthStatus = async () => {
             try {
-                const response = await axios.get(`${backendUrl}/api/v1/users/check-auth`, {
-                    withCredentials: true,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    }
+                const response = await axios.get(`${backendUrl}/api/v1/users/current-user`, {
+                    withCredentials: true
                 });
-                setIsLoggedIn(response.data.authenticated);
+                
+                // Update this condition to check for user data
+                setIsLoggedIn(!!response.data?.data);
             } catch (error) {
-                if (error.response?.status === 401) {
-                    // Explicitly handle 401 as not logged in
-                    setIsLoggedIn(false);
-                } else {
-                    console.error('Auth check error:', error);
-                    setIsLoggedIn(false);
-                }
+                console.error('Auth check error:', error);
+                setIsLoggedIn(false);
             }
         };
         
         checkAuthStatus();
-    }, [location.pathname, backendUrl]); // Re-check when route changes
+    }, [location.pathname, backendUrl]);
 
     const handleLogout = async () => {
         try {
